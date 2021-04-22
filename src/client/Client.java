@@ -21,8 +21,7 @@ public class Client {
                             response = in.readUTF();
                         } catch (IOException e) {
                             e.printStackTrace();
-                        }
-                        System.out.println(response);
+                        }System.out.println(response);
                     }
                 }
             });

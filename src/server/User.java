@@ -13,6 +13,7 @@ public class User {
     public User(String userName, Socket socket) {
         this.userName = userName;
         this.socket = socket;
+        this.uuid = UUID.randomUUID();
     }
     public String getUserName() { return userName; }
     public Socket getSocket() { return socket; }
@@ -24,5 +25,13 @@ public class User {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
     }
 }

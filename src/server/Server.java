@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class Server {
     public static void main(String[] args) {
@@ -21,24 +22,28 @@ public class Server {
                 Thread thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
+                       User user = new User("Гость", socket);
                         try {
                             DataOutputStream out = new DataOutputStream(socket.getOutputStream());
                             DataInputStream in = new DataInputStream(socket.getInputStream());
                             out.writeUTF("Введите имя: ");
                             String userName = in.readUTF();
-                            User user = new User(userName, socket);
                             users.add(user);
                             out.writeUTF(userName + " добро пожаловать на сервер!");
                             while (true) {
                                 String request = in.readUTF(); //Ждем сообщение от клиента
                                 System.out.println(userName+" : "+request);
                                 for (User user1 : users) {
-                                    if ()
+                                    if (user1.getUuid().equals(user.getUuid())){
+                                        continue;
+                                    }else
                                     user1.sendMessage(userName + " : " + request);
                                 }
                             }
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            System.out.println("Пользователь "+user.getUserName()+" Покинул чат");
+                        }finally {
+                            users.remove(user);
                         }
                     }
                 });
