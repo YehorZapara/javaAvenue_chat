@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox fx:controller="sample.Controller" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300" prefWidth="275" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TextArea prefHeight="225" prefWidth="275" fx:id="textArea" />
+      <HBox prefHeight="24.0" prefWidth="275">
+         <children>
+            <TextField prefHeight="25.0" prefWidth="223.0" />
+            <Button mnemonicParsing="false" text="Отправить" />
+         </children>
+      </HBox>
+      <Button onAction="#connect" text="Подключиться" />
+   </children>
+</VBox>
