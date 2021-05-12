@@ -4,20 +4,22 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300" prefWidth="275" style="-fx-background-color: #2E3348;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
-   <children>
-      <TextArea fx:id="textArea" prefHeight="226.0" prefWidth="307.0" style="-fx-background-color: #1a9db0;" />
-      <HBox prefHeight="24.0" prefWidth="275">
-         <children>
-            <TextField prefHeight="25.0" prefWidth="223.0" />
-            <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="98.0" text="Отправить" />
-         </children>
-      </HBox>
-      <Button onAction="#connect" style="-fx-background-color: fafafa;" text="Подключиться" textAlignment="CENTER" textFill="#56b01a" />
-      <TextField alignment="CENTER" prefHeight="23.0" prefWidth="147.0" style="-fx-background-color: #1a9db0;" text="Velcome to Study Chat!">
-         <font>
-            <Font size="10.0" />
-         </font>
-      </TextField>
-   </children>
-</VBox>
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+   <TextArea fx:id="textAreaUserList" editable="false" prefHeight="300" prefWidth="125" style="-fx-border-color: green;" />
+   <VBox prefHeight="300" prefWidth="275">
+      <children>
+         <TextArea fx:id="textArea" editable="false" prefHeight="250" prefWidth="275" style="-fx-border-color: black;">
+            <font>
+               <Font name="Fira Code Regular" size="18.0" />
+            </font>
+         </TextArea>
+         <HBox prefHeight="25.0" prefWidth="275">
+            <children>
+               <TextField fx:id="textField" onAction="#send" prefHeight="25.0" prefWidth="223.0" />
+               <Button mnemonicParsing="false" onAction="#send" text="Отправить" />
+            </children>
+         </HBox>
+         <Button onAction="#connect" prefHeight="25" prefWidth="Infinity" text="Подключиться" />
+      </children>
+   </VBox>
+</HBox>
