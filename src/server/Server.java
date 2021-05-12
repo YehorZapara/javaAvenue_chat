@@ -3,47 +3,53 @@ package server;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.UUID;
 
 public class Server {
-    public static void main(String[] args) {
-        ArrayList<User> users = new ArrayList<>(); // Колекция пользователей
+    static ArrayList<User> users = new ArrayList<>(); // Коллекция пользователей
+    public static void main(String[] args) { // Основной поток
         try {
             ServerSocket serverSocket = new ServerSocket(8188);
             System.out.println("Сервер запущен");
-            int i = 0;
-
-            while (true) {
-                Socket socket = serverSocket.accept(); //Ожидаем клиента
+            while (true){
+                Socket socket = serverSocket.accept(); // Ожидаем клиента
+                User user = new User(socket);
                 System.out.println("Клиент подключился");
-                Thread thread = new Thread(new Runnable() {
+                ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+                user.setOos(oos);
+                DataInputStream in = new DataInputStream(socket.getInputStream());
+                user.getOos().writeObject("Введите имя: ");
+                String userName = in.readUTF();
+                user.setUserName(userName);
+                users.add(user);
+                sendUserList();
+                user.getOos().writeObject(userName+" добро пожаловать на сервер!");
+                Thread thread = new Thread(new Runnable() { // Поток для клиента
                     @Override
                     public void run() {
-                       User user = new User("Гость", socket);
                         try {
-                            DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-                            DataInputStream in = new DataInputStream(socket.getInputStream());
-                            out.writeUTF("Введите имя: ");
-                            String userName = in.readUTF();
-                            users.add(user);
-                            out.writeUTF(userName + " добро пожаловать на сервер!");
-                            while (true) {
-                                String request = in.readUTF(); //Ждем сообщение от клиента
-                                System.out.println(userName+" : "+request);
-                                for (User user1 : users) {
-                                    if (user1.getUuid().equals(user.getUuid())){
-                                        continue;
-                                    }else
-                                    user1.sendMessage(userName + " : " + request);
+                            while (true){
+                                String request = in.readUTF(); // Ждём сообщение от клиента
+                                System.out.println(userName+": "+request);
+                                for (User user1 : users){
+                                    if(user1.equals(user)) continue;
+                                    user1.sendMessage(user.getUserName()+": "+request);
                                 }
                             }
-                        } catch (Exception e) {
-                            System.out.println("Пользователь "+user.getUserName()+" Покинул чат");
-                        }finally {
+                        }catch (Exception e){
+                            System.out.println(user.getUserName()+" покинул чат");
                             users.remove(user);
+                            for (User user1:users) {
+                                try {
+                                    user1.getOos().writeObject("Пользователь "+user.getUserName()+" покинул чат");
+                                } catch (IOException ioException) {
+                                    ioException.printStackTrace();
+                                }
+                            }
+                            sendUserList();
                         }
                     }
                 });
@@ -53,4 +59,20 @@ public class Server {
             e.printStackTrace();
         }
     }
+
+    private static void sendUserList(){
+        String usersName = "**userList**";
+        for (User user:users) {
+            usersName += "//"+user.getUserName();//     **userList**//user1//user2//user3//user4
+        }
+        for (User user: users) {
+            try {
+                user.getOos().writeObject(usersName);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
 }
